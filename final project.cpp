@@ -5,20 +5,23 @@ using namespace std;
 string inventory[10];
 int playerHealth = 500;
 void BattleSystem();
-void Shop(); 
+void Shop();
+void BattleSystem2();
 
 int main() {
 	srand(time(NULL));
 	int room = 1;
 	string input;
-	bool rm3Battle = false;
-	while (playerHealth > 0) {
+	bool rm3Battle = false; \
+		bool rm9Battle = false; \
+		bool rm7Battle = false; \
+		while (playerHealth > 0) {
 
 
-		    cout << "your inventory: ";
-		    for (int i = 0; i < 10; i++)
-			   cout << inventory[i] << " ";
-		    cout << endl << endl;
+			cout << "your inventory: ";
+			for (int i = 0; i < 10; i++)
+				cout << inventory[i] << " ";
+			cout << endl << endl;
 
 
 			switch (room) {
@@ -32,6 +35,7 @@ int main() {
 
 				cout << "you woke up in the memory of the world but you suddenly don't remember anything, but you had to retrace your steps. walk foward to east." << endl;
 				cout << "there's a golden key on the floor " << endl;
+				system("color 8E");
 				getline(cin, input);
 				if (input == "east")
 					room = 2;
@@ -70,13 +74,15 @@ int main() {
 
 				break;
 
-			
+
 			case 3:
 				cout << "your in the dungeon, There's a goblin behind the golden chest!" << endl;
 				if (rm3Battle == false) {
 					BattleSystem();
 					rm3Battle = true;
 				}
+				system("color 6E");
+
 				cout << "You can go west or open golden chest" << endl;
 				getline(cin, input);
 				if (input == "west")
@@ -97,7 +103,7 @@ int main() {
 				else if (input == "south")
 					room = 2;
 
-			    else if (input == "table" || "picks up the gem") {
+				else if (input == "table" || "picks up the gem") {
 					cout << "you got a diamond gem!" << endl;
 					inventory[5] = " diamond gem";
 				}
@@ -118,13 +124,19 @@ int main() {
 				break;
 			case 6:
 				cout << "you walked into the shop and a guy is welcoming you tells you 1 gem is required in three items, you can go east" << endl;
+				Shop();
 				getline(cin, input);
 				if (input == "east")
 					room = 5;
-				
+
 				break;
 			case 7:
-				cout << "you are in the afternoon forest there is a monster that has a key inside! you can go west" << endl;
+				cout << "you are in the afternoon forest there is a monster that has a key inside!" << endl;
+				if (rm7Battle == false) {
+					BattleSystem();
+					rm7Battle = true;
+				}
+				cout << "you can go west or get the boss key" << endl;
 				getline(cin, input);
 				if (input == "west")
 					room = 5;
@@ -141,13 +153,15 @@ int main() {
 				break;
 
 			case 0: // bad ending :(
-				cout << " you are in hell (0) for the rest of your life because there is no option to leave even when you fight the devil there is no freedom" << endl;
+				cout << "you are in hell (0) for the rest of your life because there is no option to leave even when you fight the devil there is no freedom.   Game Over :(" << endl;
 
+				//set player health to 0
+				playerHealth = 0;
 
 				break;
 
 			case 9:
-				cout << "your in room 9, you can go east or south" << endl;
+				cout << "you waled into castle and saw another locked door that requires a boss key, BUT A MINI BOSS HAS APPEARED!" << endl;
 				getline(cin, input);
 				if (input == "east")
 					room = 10;
@@ -156,6 +170,8 @@ int main() {
 				break;
 			case 10:
 				cout << "your in room 10, you can go west" << endl;
+				//call battle system here
+				BattleSystem();
 				getline(cin, input);
 				if (input == "west")
 					room = 9;
@@ -166,7 +182,7 @@ int main() {
 
 			}
 
-	}
+		}
 
 }
 
@@ -205,6 +221,63 @@ void BattleSystem() {
 	cout << "-------------------------end of battle-------------------------" << endl << endl;
 }
 void Shop() {
+	char input = 'a';
+	cout << endl << endl << "-----------------------------" << endl;
+	cout << "Welcome to my shop! how can i assist you today? we have diamond armor, golden sheild, and a horse. press q to quit." << endl;
+	while (input != 'q') {
+		cout << "pick an item: a) diamond armor, s)golden sheild, h) horse" << endl;
+		cin >> input;
+		switch (input) {
+		case 'a':
+			cout << "ok here's your diamond armor!" << endl;
+			inventory[6] = "diamond armor";
+			break;
+		case 's':
+			cout << "here's your golden sheild!" << endl;
+			inventory[7] = "golden sheild";
+			break;
+		case 'h':
+			cout << "here's your horse!" << endl;
+			inventory[8] = "horse";
+			break;
 
+		}
 
+	}
+	cout << "---------------------------------------" << endl;
 }
+void BattleSystem2() {
+	int MonsterHealth = 50; //LOCAL variable: can only be seen and used by this fuction!
+	int damage;
+	char dummy;
+	cout << endl << endl << "-----------MONSTER BATTLE------------------------" << endl;
+	cout << "a monster attacks!" << endl;
+	while (playerHealth > 0 && MonsterHealth > 0) {
+		//player's attack
+		damage = rand() % 100; // number between 0 and 100
+		cout << "you hit the monster  for " << damage << " damage." << endl;
+		MonsterHealth -= damage;
+		cin >> dummy;
+
+
+		//monster's attack
+		damage = rand() % 30; //number between 0 and 30
+		cout << " a monster hits you for " << damage << " damage." << endl;
+		playerHealth -= damage;
+		cout << "press any key to continue..." << endl;
+		cin >> dummy;
+
+		if (playerHealth > 0)
+			cout << "your health: " << playerHealth << endl;
+		else
+			cout << "you died." << endl;
+
+		if (MonsterHealth > 0)
+			cout << "Monster health: " << MonsterHealth << endl;
+		else
+			cout << "you are victorious! the goblin is dead." << endl;
+
+	}//end of the mini loop
+	cout << "-------------------------end of battle-------------------------" << endl << endl;
+}
+
